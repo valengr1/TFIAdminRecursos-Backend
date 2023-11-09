@@ -3,6 +3,8 @@ package adminRecursos.proveedores.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Entity @ToString @NoArgsConstructor @AllArgsConstructor
 public class EncargadoCompras {
 
@@ -20,4 +22,7 @@ public class EncargadoCompras {
 
     @Column @Getter @Setter
     private String contraseña;
+
+    @OneToMany(mappedBy = "encargadoCompras")
+    private List<Compra> compras;
 }

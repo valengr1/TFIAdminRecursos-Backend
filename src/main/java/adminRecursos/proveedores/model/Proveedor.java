@@ -3,6 +3,8 @@ package adminRecursos.proveedores.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Entity @NoArgsConstructor @AllArgsConstructor @ToString
 public class Proveedor {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY) @Getter @Setter
@@ -19,5 +21,12 @@ public class Proveedor {
 
     @Column @Getter @Setter
     private Long telefono;
+
+    @OneToMany(mappedBy = "proveedor")
+    private List<Equipamiento> equipamientos;
+
+    @OneToMany(mappedBy = "proveedor")
+    private List<Compra> compras;
+
 
 }
