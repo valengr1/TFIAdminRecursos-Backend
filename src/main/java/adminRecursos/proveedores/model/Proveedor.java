@@ -22,11 +22,9 @@ public class Proveedor {
     @Column @Getter @Setter
     private Long telefono;
 
-    @OneToMany(mappedBy = "proveedor")
-    private List<Equipamiento> equipamientos;
+    @Column @Getter @Setter
+    private Double calificacion;
 
     @OneToMany(mappedBy = "proveedor")
     private List<Compra> compras;
-
-
 }

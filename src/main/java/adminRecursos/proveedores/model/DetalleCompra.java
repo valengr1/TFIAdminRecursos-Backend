@@ -3,7 +3,8 @@ package adminRecursos.proveedores.model;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.Date;
+
+import java.sql.Date;
 
 @Entity @ToString @AllArgsConstructor @NoArgsConstructor
 public class DetalleCompra {
@@ -24,6 +25,8 @@ public class DetalleCompra {
 
     @ManyToOne @JoinColumn(name = "compra_fk",nullable = false,updatable = false) @Getter @Setter
     private Compra compra;
+
+
 
     public Double getSubtotal(){
         return cantidad * equipamiento.getCosto();

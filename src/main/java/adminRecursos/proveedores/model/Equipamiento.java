@@ -3,7 +3,7 @@ package adminRecursos.proveedores.model;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.Date;
+import java.sql.Date;
 import java.util.List;
 
 @Entity @ToString @AllArgsConstructor @NoArgsConstructor
@@ -19,9 +19,6 @@ public class Equipamiento {
 
     @Column @Getter @Setter
     private Date garantia;
-
-    @ManyToOne @JoinColumn(name = "proveedor_fk", nullable = false, updatable = false) @Getter @Setter
-    private Proveedor proveedor;
 
     @OneToMany(mappedBy = "equipamiento")
     private List<DetalleCompra> detallesCompra;

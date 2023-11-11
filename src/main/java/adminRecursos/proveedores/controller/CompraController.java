@@ -3,6 +3,7 @@ package adminRecursos.proveedores.controller;
 import adminRecursos.proveedores.model.Compra;
 import adminRecursos.proveedores.model.DetalleCompra;
 import adminRecursos.proveedores.repository.CompraRepository;
+import adminRecursos.proveedores.repository.DetalleCompraRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -24,7 +25,7 @@ public class CompraController {
     }
 
     @GetMapping("/getComprasByidProveedor/{idProveedor}")
-    public ArrayList<Compra> getComprasByIdProveedor(@PathVariable("idProveedor") Long idProveedor){
+    public ArrayList<Compra> getDetalleCompraByIdProveedor(@PathVariable("idProveedor") Long idProveedor){
         List<Compra> compras= repository.findAll();
         ArrayList<Compra> comprasCoinciden = new ArrayList<>();
         for (Compra compra: compras) {
