@@ -24,6 +24,12 @@ public class CompraController {
         return repository.findAll();
     }
 
+    @GetMapping("/getIdCompra/{idCompra}")
+    public Long getCompraById(@PathVariable("idCompra") Long idCompra){
+        Compra compra =  repository.findById(idCompra).get();
+        return compra.getId();
+    }
+
     @GetMapping("/getComprasByidProveedor/{idProveedor}")
     public ArrayList<Compra> getDetalleCompraByIdProveedor(@PathVariable("idProveedor") Long idProveedor){
         List<Compra> compras= repository.findAll();

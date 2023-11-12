@@ -2,8 +2,10 @@ package adminRecursos.proveedores.controller;
 
 import adminRecursos.proveedores.model.Compra;
 import adminRecursos.proveedores.model.DetalleCompra;
+import adminRecursos.proveedores.model.Proveedor;
 import adminRecursos.proveedores.repository.CompraRepository;
 import adminRecursos.proveedores.repository.DetalleCompraRepository;
+import adminRecursos.proveedores.repository.ProveedorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,6 +25,9 @@ public class DetalleCompraController {
     @Autowired
     DetalleCompraRepository repositoryDetalleCompra;
 
+    @Autowired
+    ProveedorRepository repositoryProveedor;
+
     @GetMapping("/getDetallesCompra")
     public List<DetalleCompra> getDetallesCompra(){
         return repositoryDetalleCompra.findAll();
@@ -39,6 +44,72 @@ public class DetalleCompraController {
         }
         return detalles;
     }
+    @GetMapping("/getDetalleCompraByIdProveedor/{idProveedor}")
+    public ArrayList<DetalleCompra> getDetalleCompraByIdProveedor(@PathVariable("idProveedor") Long idProveedor){
+        List<DetalleCompra> detallesCompra = repositoryDetalleCompra.findAll();
+        ArrayList<DetalleCompra> detalles = new ArrayList<>();
+        for (DetalleCompra detalle: detallesCompra) {
+            if (idProveedor.equals(detalle.getCompra().getProveedor().getId())){
+                detalles.add(detalle);
+            }
+        }
+        Double calificacion = 0.0;
+        Long cantidadDetalles = (long) detalles.size();
+        Double promedio = 0.0;
+        for (DetalleCompra detalle: detalles
+             ) {
+            if(detalle.getFechaEntrega().equals(detalle.getFechaEsperada())){
+                calificacion = calificacion + 1;
+            }
+            promedio = calificacion * 100 / cantidadDetalles;
+            detalle.getCompra().getProveedor().setCalificacion(promedio);
+        }
+        return detalles;
+    }
+
+    @GetMapping("/getDetallesConProveedoresCalificados")
+    public ArrayList<Proveedor> getDetallesConProveedoresCalificados(){
+        List<Proveedor> proveedores = repositoryProveedor.findAll();
+        ArrayList<DetalleCompra> detalles = new ArrayList<>();
+        for (Proveedor proveedor: proveedores) {
+            ArrayList<DetalleCompra> detallesProveedor = getDetalleCompraByIdProveedor(proveedor.getId());
+            detalles.addAll(detallesProveedor);
+        }
+        ArrayList<Proveedor> proveedoresP = new ArrayList<>();
+        for (DetalleCompra detalle: detalles
+             ) {
+            Proveedor proveedor = new Proveedor();
+            proveedor.setId(detalle.getCompra().getProveedor().getId());
+            proveedor.setCUIT(detalle.getCompra().getProveedor().getCUIT());
+            proveedor.setTelefono(detalle.getCompra().getProveedor().getTelefono());
+            proveedor.setDireccion(detalle.getCompra().getProveedor().getDireccion());
+            proveedor.setCalificacion(detalle.getCompra().getProveedor().getCalificacion());
+            proveedor.setRazonSocial(detalle.getCompra().getProveedor().getRazonSocial());
+            proveedoresP.add(proveedor);
+        }
+        return proveedoresP;
+    }
+
+    /*@GetMapping("/getProveedoresYCalificacion")
+    public ArrayList<DetalleCompra> getProveedoresYCalificacion(){
+        List<DetalleCompra> detallesCompra = repositoryDetalleCompra.findAll();
+        List<Proveedor> proveedores = repositoryProveedor.findAll();
+        ArrayList<DetalleCompra> detalles = new ArrayList<>();
+        for (DetalleCompra detalle: detallesCompra) {
+            Double calificacion = 0.0;
+            Long cantidadDetalles = (long) detalles.size();
+            Double promedio = 0.0;
+            for (DetalleCompra detallee: detalles
+            ) {
+                if(detallee.getFechaEntrega().equals(detallee.getFechaEsperada())){
+                    calificacion = calificacion + 1;
+                }
+                promedio = calificacion * 100 / cantidadDetalles;
+                detallee.getCompra().getProveedor().setCalificacion(promedio);
+            }
+        }
+        return detalles;
+    }*/
 
     @GetMapping("/getEquipamientoPorVencerSuGarantiaByProveedor/{idProveedor}")
     public ArrayList<DetalleCompra> getEquipamientoPorVencerSuGarantia(@PathVariable("idProveedor") Long idProveedor) throws ParseException, ParseException {
@@ -53,8 +124,8 @@ public class DetalleCompraController {
                 Date fechaInicio = format.parse(detalle.getEquipamiento().getGarantia().toString());
                 Long diasRestantes = fechaInicio.getTime() - fechaFinal.getTime();
                 TimeUnit unidad = TimeUnit.DAYS;
-                Long dias = unidad.convert(diasRestantes,TimeUnit.MILLISECONDS);
-                if(dias <= 30 && dias > 0){
+                Long dias = unidad.convert(diasRestantes, TimeUnit.MILLISECONDS);
+                if (dias <= 30 && dias > 0) {
                     detallesEncontrados.add(detalle);
                     System.out.println(dias);
                 }
@@ -62,6 +133,4 @@ public class DetalleCompraController {
         }
         return detallesEncontrados;
     }
-
-
 }

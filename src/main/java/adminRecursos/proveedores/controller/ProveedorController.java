@@ -25,19 +25,31 @@ public class ProveedorController {
     }
 
     /*@GetMapping("/getProveedoresYSuCalificacion")
-    public List<DetalleCompra> getProveedoresYSuCalificacion(){
+    public List<DetalleCompra> getProveedoresYSuCalificacion() {
         List<DetalleCompra> detalles = detalleCompraRepository.findAll();
-        Double acierto = 0.0;
-        for (DetalleCompra detalle:
-             detalles) {
-            if(detalle.getFechaEntrega().equals(detalle.getFechaEsperada())){
-                acierto++;
+        List<Proveedor> proveedores = repository.findAll();
+        for (DetalleCompra detalle :
+                detalles) {
+            Double promedio = 0.0;
+            Double acierto = 1.0;
+            Double sumaAciertos = 0.0;
+            Double falla = 0.0;
+            for (Proveedor proveedor : proveedores
+            ) {
+                if (detalle.getCompra().getProveedor().getId().equals(proveedor.getId())) {
+                    if (detalle.getFechaEntrega().equals(detalle.getFechaEsperada())) {
+                        sumaAciertos = sumaAciertos + acierto;
+                        System.out.println("Acierto: " + acierto);
+                        //promedio = acierto / detalles.stream().count();
+                        detalle.getCompra().getProveedor().setCalificacion(acierto);
+                    } else {
+                        falla++;
+                        System.out.println("Falla: " + falla);
+                    }
+                }
             }
-            detalle.getEquipamiento().getProveedor()
-                    .setCalificacion(acierto);
         }
         return detalles;
-
     }*/
 
     @PostMapping("/agregarProveedor")
@@ -54,7 +66,6 @@ public class ProveedorController {
 
     @GetMapping("/getProveedor/{id}")
     public Optional<Proveedor> getProveedorById(@PathVariable("id") Long id){
-
         return repository.findById(id);
     }
 
