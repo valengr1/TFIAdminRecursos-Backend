@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -62,32 +63,39 @@ public class DetalleCompraController {
                 calificacion = calificacion + 1;
             }
             promedio = calificacion * 100 / cantidadDetalles;
+
             detalle.getCompra().getProveedor().setCalificacion(promedio);
         }
         return detalles;
     }
 
     @GetMapping("/getDetallesConProveedoresCalificados")
-    public ArrayList<Proveedor> getDetallesConProveedoresCalificados(){
+    public List<Proveedor> getDetallesConProveedoresCalificados(){
         List<Proveedor> proveedores = repositoryProveedor.findAll();
         ArrayList<DetalleCompra> detalles = new ArrayList<>();
         for (Proveedor proveedor: proveedores) {
             ArrayList<DetalleCompra> detallesProveedor = getDetalleCompraByIdProveedor(proveedor.getId());
             detalles.addAll(detallesProveedor);
+            for (DetalleCompra detalle: detallesProveedor
+                 ) {
+                proveedor.setCalificacion(detalle.getCompra().getProveedor().getCalificacion());
+            }
         }
-        ArrayList<Proveedor> proveedoresP = new ArrayList<>();
-        for (DetalleCompra detalle: detalles
-             ) {
-            Proveedor proveedor = new Proveedor();
+        //ArrayList<Proveedor> proveedoresP = new ArrayList<>();
+        //for (DetalleCompra detalle: detalles
+          //   ) {
+
+            /*Proveedor proveedor = new Proveedor();
             proveedor.setId(detalle.getCompra().getProveedor().getId());
             proveedor.setCUIT(detalle.getCompra().getProveedor().getCUIT());
             proveedor.setTelefono(detalle.getCompra().getProveedor().getTelefono());
             proveedor.setDireccion(detalle.getCompra().getProveedor().getDireccion());
             proveedor.setCalificacion(detalle.getCompra().getProveedor().getCalificacion());
             proveedor.setRazonSocial(detalle.getCompra().getProveedor().getRazonSocial());
-            proveedoresP.add(proveedor);
-        }
-        return proveedoresP;
+            proveedoresP.add(proveedor);*/
+       // }
+
+        return proveedores;
     }
 
     /*@GetMapping("/getProveedoresYCalificacion")

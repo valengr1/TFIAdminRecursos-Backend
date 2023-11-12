@@ -27,4 +27,7 @@ public class Proveedor {
 
     @OneToMany(mappedBy = "proveedor")
     private List<Compra> compras;
+
+    @OneToMany(mappedBy = "proveedor")
+    private List<Tecnico> tecnicos;
 }
