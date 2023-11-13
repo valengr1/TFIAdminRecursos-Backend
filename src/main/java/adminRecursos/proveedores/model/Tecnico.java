@@ -9,6 +9,9 @@ public class Tecnico {
     private Long id;
 
     @Column @Getter @Setter
+    private Long dni;
+
+    @Column @Getter @Setter
     private String nombre;
 
     @Column @Getter @Setter
@@ -17,7 +20,7 @@ public class Tecnico {
     @Column @Getter @Setter
     private String servicio;
 
-    @ManyToOne @JoinColumn(name = "proveedor_fk", nullable = false, updatable = false)
+    @ManyToOne @JoinColumn(name = "proveedor_fk", nullable = false, updatable = false) @Getter @Setter
     private Proveedor proveedor;
 
 }

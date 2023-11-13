@@ -1,7 +1,9 @@
 package adminRecursos.proveedores.controller;
 
+import adminRecursos.proveedores.model.Compra;
 import adminRecursos.proveedores.model.DetalleCompra;
 import adminRecursos.proveedores.model.Proveedor;
+import adminRecursos.proveedores.repository.CompraRepository;
 import adminRecursos.proveedores.repository.DetalleCompraRepository;
 import adminRecursos.proveedores.repository.ProveedorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,8 @@ public class ProveedorController {
 
     @Autowired
     DetalleCompraRepository detalleCompraRepository;
+    @Autowired
+    CompraRepository compraRepository;
     @GetMapping("/getProveedores")
     public List<Proveedor> getProveedores(){
         return repository.findAll();
@@ -60,6 +64,38 @@ public class ProveedorController {
 
     @DeleteMapping("/eliminarProveedor/{id}")
     public String eliminarProveedor(@PathVariable("id") Long id) {
+        List<Compra> compras = compraRepository.findAll();
+        List<DetalleCompra> detallesCompra = detalleCompraRepository.findAll();
+        ArrayList<DetalleCompra> detallesCompraDelProveedor = new ArrayList<>();
+        ArrayList<Compra> comprasDelProveedor = new ArrayList<>();
+
+        for (Compra compra: compras
+             ) {
+            if(compra.getProveedor().getId().equals(id)){
+                comprasDelProveedor.add(compra);
+            }
+        }
+
+        for (Compra compra: comprasDelProveedor
+             ) {
+            for (DetalleCompra detalle: detallesCompra
+                 ) {
+                if(compra.getId().equals(detalle.getCompra().getId())){
+                    detallesCompraDelProveedor.add(detalle);
+                }
+            }
+        }
+
+        for (DetalleCompra detalle: detallesCompraDelProveedor
+             ) {
+            detalleCompraRepository.deleteById(detalle.getId());
+        }
+
+        for (Compra compra: comprasDelProveedor
+             ) {
+            compraRepository.deleteById(compra.getId());
+        }
+
         repository.deleteById(id);
         return "Proveedor eliminado";
     }
