@@ -59,11 +59,10 @@ public class DetalleCompraController {
         Double promedio = 0.0;
         for (DetalleCompra detalle: detalles
              ) {
-            if(detalle.getFechaEntrega().equals(detalle.getFechaEsperada())){
+            if(detalle.getFechaEntrega().equals(detalle.getFechaEsperada()) || detalle.getFechaEntrega().before(detalle.getFechaEsperada())){
                 calificacion = calificacion + 1;
             }
             promedio = calificacion * 100 / cantidadDetalles;
-
             detalle.getCompra().getProveedor().setCalificacion(promedio);
         }
         return detalles;
@@ -76,48 +75,13 @@ public class DetalleCompraController {
         for (Proveedor proveedor: proveedores) {
             ArrayList<DetalleCompra> detallesProveedor = getDetalleCompraByIdProveedor(proveedor.getId());
             detalles.addAll(detallesProveedor);
-            for (DetalleCompra detalle: detallesProveedor
-                 ) {
-                proveedor.setCalificacion(detalle.getCompra().getProveedor().getCalificacion());
+            for (DetalleCompra detalle: detallesProveedor) {
+                Long calificacion = Math.round(detalle.getCompra().getProveedor().getCalificacion());
+                proveedor.setCalificacion(Double.parseDouble(calificacion.toString()));
             }
         }
-        //ArrayList<Proveedor> proveedoresP = new ArrayList<>();
-        //for (DetalleCompra detalle: detalles
-          //   ) {
-
-            /*Proveedor proveedor = new Proveedor();
-            proveedor.setId(detalle.getCompra().getProveedor().getId());
-            proveedor.setCUIT(detalle.getCompra().getProveedor().getCUIT());
-            proveedor.setTelefono(detalle.getCompra().getProveedor().getTelefono());
-            proveedor.setDireccion(detalle.getCompra().getProveedor().getDireccion());
-            proveedor.setCalificacion(detalle.getCompra().getProveedor().getCalificacion());
-            proveedor.setRazonSocial(detalle.getCompra().getProveedor().getRazonSocial());
-            proveedoresP.add(proveedor);*/
-       // }
-
         return proveedores;
     }
-
-    /*@GetMapping("/getProveedoresYCalificacion")
-    public ArrayList<DetalleCompra> getProveedoresYCalificacion(){
-        List<DetalleCompra> detallesCompra = repositoryDetalleCompra.findAll();
-        List<Proveedor> proveedores = repositoryProveedor.findAll();
-        ArrayList<DetalleCompra> detalles = new ArrayList<>();
-        for (DetalleCompra detalle: detallesCompra) {
-            Double calificacion = 0.0;
-            Long cantidadDetalles = (long) detalles.size();
-            Double promedio = 0.0;
-            for (DetalleCompra detallee: detalles
-            ) {
-                if(detallee.getFechaEntrega().equals(detallee.getFechaEsperada())){
-                    calificacion = calificacion + 1;
-                }
-                promedio = calificacion * 100 / cantidadDetalles;
-                detallee.getCompra().getProveedor().setCalificacion(promedio);
-            }
-        }
-        return detalles;
-    }*/
 
     @GetMapping("/getEquipamientoPorVencerSuGarantiaByProveedor/{idProveedor}")
     public ArrayList<DetalleCompra> getEquipamientoPorVencerSuGarantia(@PathVariable("idProveedor") Long idProveedor) throws ParseException, ParseException {

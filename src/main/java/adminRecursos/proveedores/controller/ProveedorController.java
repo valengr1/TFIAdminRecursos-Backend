@@ -28,34 +28,6 @@ public class ProveedorController {
         return repository.findAll();
     }
 
-    /*@GetMapping("/getProveedoresYSuCalificacion")
-    public List<DetalleCompra> getProveedoresYSuCalificacion() {
-        List<DetalleCompra> detalles = detalleCompraRepository.findAll();
-        List<Proveedor> proveedores = repository.findAll();
-        for (DetalleCompra detalle :
-                detalles) {
-            Double promedio = 0.0;
-            Double acierto = 1.0;
-            Double sumaAciertos = 0.0;
-            Double falla = 0.0;
-            for (Proveedor proveedor : proveedores
-            ) {
-                if (detalle.getCompra().getProveedor().getId().equals(proveedor.getId())) {
-                    if (detalle.getFechaEntrega().equals(detalle.getFechaEsperada())) {
-                        sumaAciertos = sumaAciertos + acierto;
-                        System.out.println("Acierto: " + acierto);
-                        //promedio = acierto / detalles.stream().count();
-                        detalle.getCompra().getProveedor().setCalificacion(acierto);
-                    } else {
-                        falla++;
-                        System.out.println("Falla: " + falla);
-                    }
-                }
-            }
-        }
-        return detalles;
-    }*/
-
     @PostMapping("/agregarProveedor")
     public String agregarProveedor(@RequestBody Proveedor proveedor){
         repository.save(proveedor);
