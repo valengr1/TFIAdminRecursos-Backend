@@ -21,8 +21,8 @@ public class Compra {
     @ManyToOne @JoinColumn(name = "encargadoCompra_fk", nullable = false,updatable = false) @Getter @Setter
     private EncargadoCompras encargadoCompras;
 
-    @ManyToOne @JoinColumn(name = "proveedor_fk", nullable = false,updatable = false) @Getter @Setter
-    private Proveedor proveedor;
+    //@ManyToOne @JoinColumn(name = "proveedor_fk", nullable = false,updatable = false) @Getter @Setter
+    //private Proveedor proveedor;
 
     public Double getTotal(){
         Double total = 0.0;

@@ -23,4 +23,7 @@ public class Equipamiento {
     @OneToMany(mappedBy = "equipamiento")
     private List<DetalleCompra> detallesCompra;
 
+    @ManyToOne @JoinColumn(name = "proveedor_fk", nullable = false, updatable = false) @Getter @Setter
+    Proveedor proveedor;
+
 }

@@ -19,6 +19,9 @@ public class CompraController {
     @Autowired
     CompraRepository repository;
 
+    @Autowired
+    DetalleCompraRepository detalleComprarepository;
+
     @GetMapping("/getCompras")
     public List<Compra> getCompras(){
         return repository.findAll();
@@ -32,13 +35,24 @@ public class CompraController {
 
     @GetMapping("/getComprasByidProveedor/{idProveedor}")
     public ArrayList<Compra> getDetalleCompraByIdProveedor(@PathVariable("idProveedor") Long idProveedor){
-        List<Compra> compras= repository.findAll();
-        ArrayList<Compra> comprasCoinciden = new ArrayList<>();
-        for (Compra compra: compras) {
-            if(idProveedor.equals(compra.getProveedor().getId())){
-                comprasCoinciden.add(compra);
+        List<DetalleCompra> detalleCompras = detalleComprarepository.findAll();
+        ArrayList<DetalleCompra> detallesCoinciden = new ArrayList<>();
+        ArrayList<Compra> comprasDelProveedor = new ArrayList<>();
+        List<Compra> compras = repository.findAll();
+        for (DetalleCompra detalleCompra: detalleCompras) {
+            if(detalleCompra.getEquipamiento().getProveedor().getId().equals(idProveedor)){
+                detallesCoinciden.add(detalleCompra);
             }
         }
-        return comprasCoinciden;
+        for (Compra compra: compras
+             ) {
+            for (DetalleCompra detalle: detallesCoinciden
+                 ) {
+                if(detalle.getCompra().getId().equals(compra.getId())){
+                    comprasDelProveedor.add(compra);
+                }
+            }
+        }
+        return comprasDelProveedor;
     }
 }

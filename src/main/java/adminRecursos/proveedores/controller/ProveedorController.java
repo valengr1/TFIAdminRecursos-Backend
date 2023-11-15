@@ -1,11 +1,7 @@
 package adminRecursos.proveedores.controller;
 
-import adminRecursos.proveedores.model.Compra;
-import adminRecursos.proveedores.model.DetalleCompra;
-import adminRecursos.proveedores.model.Proveedor;
-import adminRecursos.proveedores.repository.CompraRepository;
-import adminRecursos.proveedores.repository.DetalleCompraRepository;
-import adminRecursos.proveedores.repository.ProveedorRepository;
+import adminRecursos.proveedores.model.*;
+import adminRecursos.proveedores.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,7 +18,10 @@ public class ProveedorController {
     @Autowired
     DetalleCompraRepository detalleCompraRepository;
     @Autowired
-    CompraRepository compraRepository;
+    EquipamientoRepository equipamientoRepository;
+
+    @Autowired
+    TecnicoRepository tecnicoRepository;
     @GetMapping("/getProveedores")
     public List<Proveedor> getProveedores(){
         return repository.findAll();
@@ -36,38 +35,20 @@ public class ProveedorController {
 
     @DeleteMapping("/eliminarProveedor/{id}")
     public String eliminarProveedor(@PathVariable("id") Long id) {
-        List<Compra> compras = compraRepository.findAll();
-        List<DetalleCompra> detallesCompra = detalleCompraRepository.findAll();
-        ArrayList<DetalleCompra> detallesCompraDelProveedor = new ArrayList<>();
-        ArrayList<Compra> comprasDelProveedor = new ArrayList<>();
-
-        for (Compra compra: compras
+        List<Equipamiento> equipamientos = equipamientoRepository.findAll();
+        List<Tecnico> tecnicos = tecnicoRepository.findAll();
+        for (Equipamiento equipamiento: equipamientos
              ) {
-            if(compra.getProveedor().getId().equals(id)){
-                comprasDelProveedor.add(compra);
+            if(equipamiento.getProveedor().getId().equals(id)){
+                equipamientoRepository.delete(equipamiento);
             }
         }
-
-        for (Compra compra: comprasDelProveedor
-             ) {
-            for (DetalleCompra detalle: detallesCompra
-                 ) {
-                if(compra.getId().equals(detalle.getCompra().getId())){
-                    detallesCompraDelProveedor.add(detalle);
-                }
+        for (Tecnico tecnico: tecnicos
+        ) {
+            if(tecnico.getProveedor().getId().equals(id)){
+                tecnicoRepository.delete(tecnico);
             }
         }
-
-        for (DetalleCompra detalle: detallesCompraDelProveedor
-             ) {
-            detalleCompraRepository.deleteById(detalle.getId());
-        }
-
-        for (Compra compra: comprasDelProveedor
-             ) {
-            compraRepository.deleteById(compra.getId());
-        }
-
         repository.deleteById(id);
         return "Proveedor eliminado";
     }

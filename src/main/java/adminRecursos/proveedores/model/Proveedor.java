@@ -25,9 +25,12 @@ public class Proveedor {
     @Column @Getter @Setter
     private Double calificacion;
 
-    @OneToMany(mappedBy = "proveedor")
-    private List<Compra> compras;
+    //@OneToMany(mappedBy = "proveedor")
+    //private List<Compra> compras;
 
     @OneToMany(mappedBy = "proveedor")
     private List<Tecnico> tecnicos;
+
+    @OneToMany(mappedBy = "proveedor")
+    private List<Equipamiento> equipamientos;
 }
